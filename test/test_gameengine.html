@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ImageLoader Test</title>
+		<style>
+			#container{			
+				text-align: center;
+			}
+
+			canvas{
+				border: 1px solid black;
+			}
+		</style>
+		<script type = "text/javascript" src = "../js/Defines.js"></script>
+		<script type = "text/javascript" src = "../js/GameStateManager.js"></script>
+		<script type = "text/javascript" src = "../js/GameEngine.js"></script>
+		<script>
+			window.onload = function(){
+				var ge = new KaboomBoy.GameEngine(document.getElementById("container"));
+				var gsm = ge.getGameStateManager();
+
+				gsm.addState("test-state", {
+					x: 100,
+					y: 100,
+					dx: 2,
+
+					init: function(){
+
+					},
+
+					update: function(){
+						console.log("updating");
+						this.x += this.dx;
+
+						if(this.x > 400){
+							this.dx = -2;
+						}else
+						if(this.x < 100){
+							this.dx = 2;
+						}
+
+					},
+
+					render: function(ctx){
+						ctx.clearRect(0, 0, 640, 480)
+						ctx.fillRect(this.x, this.y, 40, 40);
+					},
+				});
+
+				gsm.loadState("test-state");
+
+				ge.run();
+			}
+			
+		</script>
+	</head>
+	<body>
+		<div id = "container"></div>
+	</body>
+</html>

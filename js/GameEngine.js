@@ -6,15 +6,21 @@
  *
  *
  */
- (function(){
+ (function(GameStateManager){
 
  	window.requestAnimationFrame = window.requestAnimationFrame || null;
 
  	/**
  	 *	Game Engine
  	 */
- 	function GameEngine(){
+ 	function GameEngine(container){
  		this._fps = 60;
+
+ 		this._canvas = document.createElement("canvas");
+ 		this._canvas.width = 640;
+ 		this._canvas.height = 480;
+ 		container.appendChild(this._canvas);
+ 		this._ctx = this._canvas.getContext("2d");
 
  		// GameStateManager
  		this._gsm = new GameStateManager();
@@ -22,6 +28,14 @@
 
  	GameEngine.prototype.getGameStateManager = function(){
  		return this._gsm;
+ 	}
+
+ 	GameEngine.prototype.update = function(){
+ 		this._gsm.update();
+ 	}
+
+ 	GameEngine.prototype.render = function(){
+ 		this._gsm.render(this._ctx);
  	}
 
  	GameEngine.prototype.run = function(){
@@ -42,6 +56,8 @@
  				// If Game Tick should happen
 	 			if(nextTime < timestamp){
 	 				// Game Tick
+	 				ge.update();
+	 				ge.render();
 
 	 				nextTime += msPerFrame;
 	 				framesLastSecond++;
@@ -71,4 +87,4 @@
 
  	window.KaboomBoy.GameEngine = GameEngine;
 
- })();
+ })(KaboomBoy.GameStateManager);
