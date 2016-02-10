@@ -10,7 +10,7 @@
 	 */
 	function ImageLoader(){
 		// Images 
-		this._images = [];
+		this._images = {};
 
 		// image loading queue [key, path]
 		this._pathQueue = [];
@@ -74,7 +74,10 @@
 
 				image.addEventListener("error", (function(k, p){
 					return function(){
+						// Recycle the failed download, remove the image entry
 						failed[failed.length] = [k, p];
+						delete that._images[k];
+
 						notifyProgress(p, false, --remaining);
 						isFinished();
 					}
@@ -96,6 +99,6 @@
 		return this._images[key] || null;
 	}
 
-	window.Bomberboy.ImageLoader = ImageLoader;
+	window.KaboomBoy.ImageLoader = ImageLoader;
 
 })();

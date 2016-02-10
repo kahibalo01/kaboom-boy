@@ -8,7 +8,6 @@
  */
  (function(){
 
- 	window.Bomberboy = {};
  	window.requestAnimationFrame = window.requestAnimationFrame || null;
 
  	/**
@@ -16,6 +15,13 @@
  	 */
  	function GameEngine(){
  		this._fps = 60;
+
+ 		// GameStateManager
+ 		this._gsm = new GameStateManager();
+ 	}
+
+ 	GameEngine.prototype.getGameStateManager = function(){
+ 		return this._gsm;
  	}
 
  	GameEngine.prototype.run = function(){
@@ -63,43 +69,6 @@
 
  	}
 
-
-
- 	/**
- 	 *	Game State Manager
- 	 */
- 	 function GameStateManager(){
- 	 	
- 	 }
-
- 	 GameStateManager.prototype.addState = function(){
-
- 	 }
-
- 	 GameStateManager.prototype.removeState = function(){
-
- 	 }
-
- 	 GameStateManager.prototype.loadState = function(){
-
- 	 }
-
- 	 GameStateManager.prototype.changeState = function(){
-
- 	 }
-
- 	 GameStateManager.prototype.init = function(){
-
- 	 }
-
- 	 GameStateManager.prototype.update = function(){
-
- 	 }
-
- 	 GameStateManager.prototype.render = function(){
- 	 	
- 	 }
-
- 	window.Bomberboy.GameEngine = GameEngine;
+ 	window.KaboomBoy.GameEngine = GameEngine;
 
  })();
