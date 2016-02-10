@@ -1,0 +1,56 @@
+Game Elements:
+	
+	+ Bombs
+		
+	+ Blocks
+
+		- Crate
+		- Brick
+		- Metal
+		- Barrel
+		- Bush
+		- Metal (indestructible)
+		- Tunnel
+
+	+ Surfaces:
+
+		- Ice
+		- Mud
+		
+	+ Enemies
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===================================================
+
+ Loading images
+ 	+ queue image filepaths
+ 	+ batch download images
+ 		-> notify progress using callbacks
+ 			Progress to track:
+ 				- files finished
+ 				- error in downloading file
+ 				- queue empty
+
+ 	Callback Functions:
+ 		+ notifyProgress: success, fail, remaining
+
+
+
+
+
+
+
+

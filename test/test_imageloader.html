@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ImageLoader Test</title>
+		<script type = "text/javascript" src = "js/GameEngine.js"></script>
+		<script type = "text/javascript" src = "js/ResourceLoader.js"></script>
+		<script>
+			window.onload = function(){
+				var il = new Bomberboy.ImageLoader();
+				il.queueLoadImage("brick", "assets/img/New Folder/Brick.png");
+				il.queueLoadImage("stone", "assets/img/New Folder/Stone Block.png");
+				il.queueLoadImage("metal", "assets/img/New Folder/Metal Block.png");
+				il.queueLoadImage("pillar", "assets/img/New Folder/Pillar.png");
+
+				il.loadAllImages(function(path, success, remaining){
+					console.log("Loading " + path + " finished, result: " + (success ? "Success" : "Fail") + ". remaining: " + remaining);
+				}, function(){
+					var ctx = document.getElementById("canvas").getContext("2d");
+					ctx.drawImage(il.getImage("brick"), 100, 100, 40, 40);
+					ctx.drawImage(il.getImage("stone"), 100, 140, 40, 40);
+					ctx.drawImage(il.getImage("metal"), 140, 100, 40, 40);
+					ctx.drawImage(il.getImage("pillar"), 140, 140, 40, 40);
+				});
+
+			}
+		</script>
+	</head>
+	<body>
+		<canvas id = "canvas" width = "600", height = "400"></canvas>
+	</body>
+</html>
