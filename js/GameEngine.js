@@ -10,17 +10,37 @@
 
  	window.requestAnimationFrame = window.requestAnimationFrame || null;
 
+ 	var DEFAULT_SCREEN_WIDTH = 640,
+ 		DEFAULT_SCREEN_HEIGHT = 480,
+ 		DEFAULT_SCALE = 1;
+
+
+ 	function createCanvas(width, height){
+ 		var canvas = document.createElement("canvas");
+ 		canvas.width = width;
+ 		canvas.height = height;
+ 		return canvas;
+ 	}
+
  	/**
  	 *	Game Engine
  	 */
- 	function GameEngine(container){
- 		this._fps = 60;
+ 	function GameEngine(container, fps, screenWidth, screenHeight, scale){
+ 		// Set defaults
+ 		screenWidth = (typeof screenWidth === "undefined" ? DEFAULT_SCREEN_WIDTH : screenWidth);
+ 		screenHeight = (typeof screenHeight === "undefined" ? DEFAULT_SCREEN_HEIGHT: screenHeight);
+ 		scale = (typeof scale === "undefined" ? DEFAULT_SCALE : scale);
 
- 		this._canvas = document.createElement("canvas");
- 		this._canvas.width = 800;
- 		this._canvas.height = 600;
- 		container.appendChild(this._canvas);
- 		this._ctx = this._canvas.getContext("2d");
+ 		this._fps = fps;
+
+		// Main canvas
+		this._displayCanvas = createCanvas(screenWidth, screenHeight);
+		this._displayContext = this._displayCanvas.getContext("2d");
+		container.appendChild(this._displayCanvas);
+
+		// Backbuffer (for double buffering)
+		this._bufferCanvas = createCanvas(Math.floor(screenWidth / scale), Math.floor(screenHeight / scale));
+		this._bufferContext = this._bufferCanvas.getContext("2d");
 
  		// GameStateManager
  		this._gsm = new GameStateManager();
@@ -35,7 +55,13 @@
  	}
 
  	GameEngine.prototype.render = function(){
- 		this._gsm.render(this._ctx);
+ 		this._bufferContext.clearRect(0, 0, this._bufferCanvas.width, this._bufferCanvas.height);
+ 		this._gsm.render(this._bufferContext);
+ 	}
+
+ 	GameEngine.prototype.renderToScreen = function(){
+ 		this._displayContext.clearRect(0, 0, this._displayCanvas.width, this._displayCanvas.height);
+ 		this._displayContext.drawImage(this._bufferCanvas, 0, 0, this._displayCanvas.width, this._displayCanvas.height);
  	}
 
  	GameEngine.prototype.run = function(){
@@ -58,6 +84,7 @@
 	 				// Game Tick
 	 				ge.update();
 	 				ge.render();
+	 				ge.renderToScreen();
 
 	 				nextTime += msPerFrame;
 	 				framesLastSecond++;

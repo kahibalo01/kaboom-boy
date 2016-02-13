@@ -15,43 +15,45 @@
 		<script type = "text/javascript" src = "../js/GameStateManager.js"></script>
 		<script type = "text/javascript" src = "../js/GameEngine.js"></script>
 		<script>
-			window.onload = function(){
-				var ge = new KaboomBoy.GameEngine(document.getElementById("container"));
-				var gsm = ge.getGameStateManager();
+			window.onload = (function(GameEngine, Defines){
+				return function(){
+					var ge = new GameEngine(document.getElementById("container"), Defines["FPS"], Defines["screen_width"], 
+						Defines["screen_height"], Defines["screen_scale"]);
+					var gsm = ge.getGameStateManager();
 
-				gsm.addState("test-state", {
-					x: 100,
-					y: 100,
-					dx: 2,
+					gsm.addState("test-state", {
+						x: 100,
+						y: 100,
+						dx: 1,
 
-					init: function(){
+						init: function(){
 
-					},
+						},
 
-					update: function(){
-						console.log("updating");
-						this.x += this.dx;
+						update: function(){
+							console.log("updating");
+							this.x += this.dx;
 
-						if(this.x > 400){
-							this.dx = -2;
-						}else
-						if(this.x < 100){
-							this.dx = 2;
-						}
+							if(this.x > 400){
+								this.dx = -1;
+							}else
+							if(this.x < 100){
+								this.dx = 1;
+							}
 
-					},
+						},
 
-					render: function(ctx){
-						ctx.clearRect(0, 0, 640, 480)
-						ctx.fillRect(this.x, this.y, 40, 40);
-					},
-				});
+						render: function(ctx){
+							ctx.fillRect(this.x, this.y, 20, 20);
+						},
+					});
 
-				gsm.loadState("test-state");
+					gsm.loadState("test-state");
 
-				ge.run();
-			}
-			
+					ge.run();
+				}
+
+			})(KaboomBoy.GameEngine, KaboomBoy.Defines);
 		</script>
 	</head>
 	<body>
