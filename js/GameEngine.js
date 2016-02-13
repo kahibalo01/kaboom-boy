@@ -17,8 +17,8 @@
  		this._fps = 60;
 
  		this._canvas = document.createElement("canvas");
- 		this._canvas.width = 640;
- 		this._canvas.height = 480;
+ 		this._canvas.width = 800;
+ 		this._canvas.height = 600;
  		container.appendChild(this._canvas);
  		this._ctx = this._canvas.getContext("2d");
 
