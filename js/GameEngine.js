@@ -36,11 +36,13 @@
 		// Main canvas
 		this._displayCanvas = createCanvas(screenWidth, screenHeight);
 		this._displayContext = this._displayCanvas.getContext("2d");
+		this._displayContext.imageSmoothingEnabled = false;
 		container.appendChild(this._displayCanvas);
 
 		// Backbuffer (for double buffering)
 		this._bufferCanvas = createCanvas(Math.floor(screenWidth / scale), Math.floor(screenHeight / scale));
 		this._bufferContext = this._bufferCanvas.getContext("2d");
+		this._bufferContext.imageSmoothingEnabled = false;
 
  		// GameStateManager
  		this._gsm = new GameStateManager();

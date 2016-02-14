@@ -12,6 +12,15 @@
 		this._rows = Math.floor(image.height / spriteHeight);
 	}
 
+	Spritesheet.prototype.getDimensions = function(){
+		return {
+			sheetWidth: this._width,
+			sheetHeight: this._height,
+			spriteWidth: this._spriteWidth,
+			spriteHeight: this._spriteHeight
+		};
+	}
+
 	Spritesheet.prototype.drawSpriteToContext = function(ctx, index, x, y){
 		var sw = this._spriteWidth, sh = this._spriteHeight;
 		var xSprite = (index % this._cols) * this._spriteWidth;
