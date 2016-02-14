@@ -18,8 +18,9 @@
 		<script type = "text/javascript" src = "../js/Spritesheet.js"></script>
 		<script type = "text/javascript" src = "../js/Map.js"></script>
 		<script>
-			window.onload = function(){
-				
+
+			var test = (function(Defines, GameEngine, ImageLoader, Map){
+
 				var mapgrid = [
 					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -35,7 +36,7 @@
 					[0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 					[0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 					[0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[0, 0, 0, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -44,36 +45,74 @@
 					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 				];
 
-				var Defines = KaboomBoy.Defines;			
-
-				var ge = new KaboomBoy.GameEngine(document.getElementById("container"), Defines["FPS"], Defines["screen_width"], 
-							Defines["screen_height"], Defines["screen_scale"]);
-				var gsm = ge.getGameStateManager();
-				var il = new KaboomBoy.ImageLoader();
-				il.queueLoadImage("maptest", "../assets/img/New Folder/Map Tiles Test.png");
-
 				var map;
+				var il = new ImageLoader();
+				il.queueLoadImage("maptest_image", "../assets/img/New Folder/Map Tiles Test.png");
 
-				gsm.addState("maptest", {
-					init: function(){
+				return function(){
+					var ge = new GameEngine(document.getElementById("container"), Defines["FPS"], Defines["screen_width"],
+								Defines["screen_height"], Defines["screen_scale"]);
 
-					},
+					var gsm = ge.getGameStateManager();
+					gsm.addState("maptest", {
+						x: 0,
+						y: 0,
+						dx: 2,
+						dy: 0,
 
-					update: function(){
 
-					},
+						init: function(){
 
-					render: function(ctx){
-						map.render(ctx);
+						},
+
+						update: function(){
+							this.x += this.dx;
+							this.y += this.dy;
+
+							if(this.x > 150){
+								this.x = 150;
+								this.dx = 0;
+								this.dy = 2;
+							}else
+							if(this.x < 0){
+								this.x = 0;
+								this.dx = 0;
+								this.dy = -2;
+							}else
+							if(this.y > 150){
+								this.y = 150;
+								this.dy = 0;
+								this.dx = -2;
+							}else
+							if(this.y < 0){
+								this.y = 0;
+								this.dy = 0;
+								this.dx = 2;
+							}
+
+
+							map.setWorldPosition(this.x, this.y);
+						},
+
+						render: function(ctx){
+							map.render(ctx);
+						}
+					});
+
+					
+
+					var rungame = function(){
+						map = new KaboomBoy.Map(mapgrid, new KaboomBoy.Spritesheet(il.getImage("maptest_image"), 20, 20), Defines["screen_width"], Defines["screen_height"]);
+						gsm.loadState("maptest");
+						ge.run();
 					}
-				});
 
-				il.loadAllImages(function(){}, function(){
-					map = new KaboomBoy.Map(mapgrid, new KaboomBoy.Spritesheet(il.getImage("maptest"), 20, 20), Defines["screen_width"], Defines["screen_height"]);
-					gsm.loadState("maptest");
-					ge.run();
-				});
-			}
+					il.loadAllImages(function(){}, rungame);
+				}
+			})(KaboomBoy.Defines, KaboomBoy.GameEngine, KaboomBoy.ImageLoader, KaboomBoy.Map);
+
+			window.onload = test;
+		
 		</script>
 	</head>
 	<body>

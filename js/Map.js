@@ -1,7 +1,9 @@
 (function(){
 	
 	/**
-	 *
+	 * The purposes of the Map are:
+	 *		- container for the the tilemap data
+	 *		- renderer of the tilemap
 	 *
 	 */
 	function Map(grid, tilesheet, screenWidth, screenHeight){
@@ -21,11 +23,13 @@
 		this._yTileOffset;
 
 		// Dimensions
-		this._tilesheetDimensions = tilesheet.getDimensions();
+		var tilesheetDimensions = tilesheet.getDimensions();
+		this._tileWidth = tilesheetDimensions.spriteWidth;
+		this._tileHeight = tilesheetDimensions.spriteHeight;
 
 		// Tiles to draw
-		this._numColsVisible = Math.ceil(screenWidth / this._tilesheetDimensions.spriteWidth);
-		this._numRowsVisible = Math.ceil(screenHeight / this._tilesheetDimensions.spriteHeight);
+		this._numColsVisible = Math.ceil(screenWidth / this._tileWidth);
+		this._numRowsVisible = Math.ceil(screenHeight / this._tileHeight);
 
 		this.setWorldPosition(0, 0);
 	}
@@ -38,23 +42,23 @@
 		this._yWorld = y;
 
 		// Recalculate tile Offset
-		this._xTileOffset = Math.floor(x / this._tilesheetDimensions.spriteWidth);
-		this._yTileOffset = Math.floor(y / this._tilesheetDimensions.spriteHeight);
+		this._xTileOffset = Math.floor(x / this._tileWidth);
+		this._yTileOffset = Math.floor(y / this._tileHeight);
 	}
 
+	/**
+	 *
+	 */
 	Map.prototype.render = function(ctx){
-		var rows = this._numRowsVisible,
-			cols = this._numColsVisible,
-			spriteWidth = this._tilesheetDimensions.spriteWidth,
-			spriteHeight = this._tilesheetDimensions.spriteHeight;
+		var spriteWidth = this._tileWidth,
+			spriteHeight = this._tileHeight;
 
 		// Determine range of tiles to draw
 		var xStart = this._xTileOffset,
 			yStart = this._yTileOffset;
 
-		var xEnd = xStart + cols,
-			yEnd = yStart + rows;
-
+		var xEnd = xStart + this._numColsVisible,
+			yEnd = yStart + this._numRowsVisible;
 
 		// Bounds
 		xEnd = (xEnd > this._gridCols - 1 ? this._gridCols - 1 : xEnd);
@@ -64,15 +68,16 @@
 		var xScreenStart = -(this._xWorld % spriteWidth),
 			y = -(this._yWorld % spriteHeight);
 
-		var i, j
+		var i, j;
 
+		// Loop for drawing tiles
 		for(i = yStart; i < yEnd + 1; i++){
 			
 			x = xScreenStart;
 			for(j = xStart; j < xEnd + 1; j++){
 				// Draw Tile
 				this._tilesheet.drawSpriteToContext(ctx, this.grid[i][j], x, y);
-				x += spriteWidth
+				x += spriteWidth;
 			}
 			y += spriteHeight;
 		}
