@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ImageLoader Test</title>
+		<style>
+			#container{			
+				text-align: center;
+			}
+
+			canvas{
+				border: 1px solid black;
+			}
+		</style>
+		<script type = "text/javascript" src = "../js/Defines.js"></script>
+		<script type = "text/javascript" src = "../js/GameStateManager.js"></script>
+		<script type = "text/javascript" src = "../js/GameEngine.js"></script>
+		<script type = "text/javascript" src = "../js/ResourceLoader.js"></script>
+		<script type = "text/javascript" src = "../js/Spritesheet.js"></script>
+		<script>
+			window.onload = function(){
+				var ge = new KaboomBoy.GameEngine(document.getElementById("container"));
+				var gsm = ge.getGameStateManager();
+
+				var ss;
+
+				gsm.addState("test-state", {
+					i: 0,
+					t: 0,
+
+					init: function(){
+					},
+
+					update: function(){
+						if(++this.t === 40){
+							if(++this.i === 8){
+								this.i = 0;
+							}
+							this.t = 0;
+						}
+					},
+
+					render: function(ctx){
+						if(this.t === 0){
+							ctx.clearRect(100, 100, 40, 40);
+							ss.drawSpriteToContext(ctx, this.i, 100, 100);
+						}
+					},
+				});
+
+				var il = new KaboomBoy.ImageLoader();
+				il.queueLoadImage("spritesheet test", "../assets/img/New Folder/Spritesheet Test.png");
+				il.loadAllImages(function(path){
+					console.log("Loaded " + path);
+				}, function(){
+					ss = new KaboomBoy.Spritesheet(il.getImage("spritesheet test"), 40, 40);
+
+					gsm.loadState("test-state");
+					ge.run();
+				});
+				
+
+				
+
+				
+			}
+			
+		</script>
+	</head>
+	<body>
+		<div id = "container"></div>
+	</body>
+</html>
