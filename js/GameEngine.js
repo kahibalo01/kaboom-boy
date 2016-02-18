@@ -12,7 +12,8 @@
 
  	var DEFAULT_SCREEN_WIDTH = 640,
  		DEFAULT_SCREEN_HEIGHT = 480,
- 		DEFAULT_SCALE = 1;
+ 		DEFAULT_SCALE = 1,
+ 		DEFAULT_FPS = 30;
 
 
  	function createCanvas(width, height){
@@ -26,12 +27,13 @@
  	 *	Game Engine
  	 */
  	function GameEngine(container, fps, screenWidth, screenHeight, scale){
+
  		// Set defaults
  		screenWidth = (typeof screenWidth === "undefined" ? DEFAULT_SCREEN_WIDTH : screenWidth);
  		screenHeight = (typeof screenHeight === "undefined" ? DEFAULT_SCREEN_HEIGHT: screenHeight);
  		scale = (typeof scale === "undefined" ? DEFAULT_SCALE : scale);
 
- 		this._fps = fps;
+ 		this._fps = (typeof fps === "undefined" ? DEFAULT_FPS : fps);
 
 		// Main canvas
 		this._displayCanvas = createCanvas(screenWidth, screenHeight);
