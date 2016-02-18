@@ -7,7 +7,13 @@
 		// Screen Dimensions
 		"screen_width": 800,
 		"screen_height": 600,
-		"screen_scale": 2
+		"screen_scale": 2,
+		// Keys
+		"LEFT": 37,
+		"UP": 38,
+		"RIGHT": 39,
+		"DOWN": 40,
+		
 	};
 
 

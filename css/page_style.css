@@ -1,0 +1,12 @@
+#game-container, #description{
+	text-align: center;
+}
+
+#description{
+	font: 16px/24px Helvetica;
+}
+
+#game-container canvas{
+	border: 1px solid black;
+}
+

@@ -1,9 +1,10 @@
 (function(){
 	
 	/**
-	 * The purposes of the Map are:
-	 *		- container for the the tilemap data
-	 *		- renderer of the tilemap
+	 * The purposes of Map are:
+	 *		- Container for the tilemap data
+	 *		- Tracks which part of the map is vieved
+	 *		- Renders the viewable part of the map
 	 *
 	 */
 	function Map(grid, tilesheet, screenWidth, screenHeight){
@@ -47,7 +48,7 @@
 	}
 
 	/**
-	 *
+	 *	Renders the viewed part of the tilemap
 	 */
 	Map.prototype.render = function(ctx){
 		var spriteWidth = this._tileWidth,

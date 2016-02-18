@@ -48,6 +48,10 @@
  		this._gsm = new GameStateManager();
  	}
 
+ 	GameEngine.prototype.getMainCanvas = function(){
+ 		return this._displayCanvas;
+ 	} 
+
  	GameEngine.prototype.getGameStateManager = function(){
  		return this._gsm;
  	}
@@ -97,7 +101,7 @@
 	 				curFPS = framesLastSecond;
 	 				framesLastSecond = 0;
 	 				nextMinute += 1000;
-	 				console.log(curFPS);
+	 				console.log("FPS: " + curFPS);
 	 			}
 
 	 			requestAnimationFrame(loop);
@@ -114,6 +118,7 @@
 
  	}
 
+ 	// 
  	window.KaboomBoy.GameEngine = GameEngine;
 
  })(KaboomBoy.GameStateManager);
