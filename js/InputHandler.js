@@ -1,7 +1,11 @@
 (function(){
 
-	function KeyHandler(){
+	function KeyHandler(eventTarget){
 		this._keys = {};
+
+		if(typeof eventTarget !== "undefined"){
+			this.init(eventTarget);
+		}
 	}
 
 	KeyHandler.prototype.init = function(eventTarget){

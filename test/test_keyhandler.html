@@ -33,8 +33,7 @@
 					engine = new GameEngine(document.getElementById("game-container"), Defines["FPS"],
 						640, 480, Defines["screen_scale"]);
 					
-					keyhandler = new KeyHandler();
-					keyhandler.init(engine.getMainCanvas());
+					keyhandler = new KeyHandler(engine.getMainCanvas());
 					gsm = engine.getGameStateManager();
 
 					gsm.addState("test", {
@@ -63,7 +62,6 @@
 					imageloader = new ImageLoader();
 					imageloader.queueLoadImage("directions", "../assets/img/test/Directions.png");
 
-					
 					imageloader.loadAllImages(function(){},
 						function(){
 							engine.run();
