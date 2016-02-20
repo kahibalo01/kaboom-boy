@@ -1,16 +1,16 @@
+<!-- 
+	NOTE: TEST PAGE
+
+	This page is meant to test mainly the `Spritesheet` class. but also to a lesser extent the following classes:
+		- GameEngine
+		- GameStateManager
+		- ImageLoader
+-->
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>ImageLoader Test</title>
-		<style>
-			#container{			
-				text-align: center;
-			}
-
-			canvas{
-				border: 1px solid black;
-			}
-		</style>
+		<title>Spritesheet Test</title>
+		<link rel = "stylesheet" href = "../css/page_style.css"/>
 		<script type = "text/javascript" src = "../js/Defines.js"></script>
 		<script type = "text/javascript" src = "../js/GameStateManager.js"></script>
 		<script type = "text/javascript" src = "../js/GameEngine.js"></script>
@@ -18,7 +18,7 @@
 		<script type = "text/javascript" src = "../js/Spritesheet.js"></script>
 		<script>
 			window.onload = function(){
-				var ge = new KaboomBoy.GameEngine(document.getElementById("container"));
+				var ge = new KaboomBoy.GameEngine(document.getElementById("game-container"), 30, 640, 480, 2);
 				var gsm = ge.getGameStateManager();
 
 				var ss;
@@ -31,24 +31,25 @@
 					},
 
 					update: function(){
-						if(++this.t === 40){
-							if(++this.i === 8){
+						this.t++;
+						if(this.t === 40){
+
+							this.i++;
+							if(this.i === 8){
 								this.i = 0;
 							}
+
 							this.t = 0;
 						}
 					},
 
 					render: function(ctx){
-						if(this.t === 0){
-							ctx.clearRect(100, 100, 40, 40);
-							ss.drawSpriteToContext(ctx, this.i, 100, 100);
-						}
+						ss.drawSpriteToContext(ctx, this.i, 140, 100);
 					},
 				});
 
 				var il = new KaboomBoy.ImageLoader();
-				il.queueLoadImage("spritesheet test", "../assets/img/New Folder/Spritesheet Test.png");
+				il.queueLoadImage("spritesheet test", "../assets/img/test/Spritesheet Test.png");
 				il.loadAllImages(function(path){
 					console.log("Loaded " + path);
 				}, function(){
@@ -58,15 +59,16 @@
 					ge.run();
 				});
 				
-
-				
-
-				
 			}
 			
 		</script>
 	</head>
 	<body>
-		<div id = "container"></div>
+		<div id = "game-container"></div>
+		<div id = "description">
+			<h2>Spritesheet Test</h2>
+			<b>Expected Result: </b>Roman numerals I to VII will flash in different colors. <br>
+			(VII is also there, but in color white, so it is not visible)<br>
+		</div>
 	</body>
 </html>

@@ -1,16 +1,16 @@
+<!-- 
+	NOTE: TEST PAGE
+
+	This page is meant to test mainly the `Map` class. but also to a lesser extent the following classes:
+		- GameEngine
+		- GameStateManager
+		- ImageLoader
+-->
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>Map Test</title>
-		<style>
-			#container{			
-				text-align: center;
-			}
-
-			canvas{
-				border: 1px solid black;
-			}
-		</style>
+		<link rel = "stylesheet" href = "../css/page_style.css"/>
 		<script type = "text/javascript" src = "../js/Defines.js"></script>
 		<script type = "text/javascript" src = "../js/GameStateManager.js"></script>
 		<script type = "text/javascript" src = "../js/GameEngine.js"></script>
@@ -22,36 +22,34 @@
 			var test = (function(Defines, GameEngine, ImageLoader, Map){
 
 				var mapgrid = [
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+					[1, 1, 1, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 1, 1, 1],
+					[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+					[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+					[4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
+					[4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
+					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					[4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
+					[4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4],
+					[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+					[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+					[1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 1, 1, 1],
 				];
 
 				var map;
 				var il = new ImageLoader();
-				il.queueLoadImage("maptest_image", "../assets/img/New Folder/Map Tiles Test.png");
+				il.queueLoadImage("maptest_image", "../assets/img/test/Map Tiles Test.png");
 
 				return function(){
-					var ge = new GameEngine(document.getElementById("container"), Defines["FPS"], Defines["screen_width"],
-								Defines["screen_height"], Defines["screen_scale"]);
+					var ge = new GameEngine(document.getElementById("game-container"), 30, 640, 480, 2);
 
 					var gsm = ge.getGameStateManager();
 					gsm.addState("maptest", {
@@ -69,8 +67,9 @@
 							this.x += this.dx;
 							this.y += this.dy;
 
-							if(this.x > 150){
-								this.x = 150;
+
+							if(this.x > 80){
+								this.x = 80;
 								this.dx = 0;
 								this.dy = 2;
 							}else
@@ -79,8 +78,8 @@
 								this.dx = 0;
 								this.dy = -2;
 							}else
-							if(this.y > 150){
-								this.y = 150;
+							if(this.y > 160){
+								this.y = 160;
 								this.dy = 0;
 								this.dx = -2;
 							}else
@@ -102,7 +101,7 @@
 					
 
 					var rungame = function(){
-						map = new KaboomBoy.Map(mapgrid, new KaboomBoy.Spritesheet(il.getImage("maptest_image"), 20, 20), Defines["screen_width"], Defines["screen_height"]);
+						map = new KaboomBoy.Map(mapgrid, new KaboomBoy.Spritesheet(il.getImage("maptest_image"), 20, 20), 640, 480);
 						gsm.loadState("maptest");
 						ge.run();
 					}
@@ -116,6 +115,10 @@
 		</script>
 	</head>
 	<body>
-		<div id = "container"></div>
+		<div id = "game-container"></div>
+		<div id = "description">
+			<h2>Map Test</h2>
+			<b>Expected Result: </b>The map will pan towards the right, then down, then left, then up. Repeating.<br>
+		</div>
 	</body>
 </html>

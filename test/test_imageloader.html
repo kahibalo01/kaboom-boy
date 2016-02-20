@@ -1,49 +1,60 @@
+<!-- 
+	NOTE: TEST PAGE
+
+	This page is meant to test the `ImageLoaer` class
+-->
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>ImageLoader Test</title>
+		<link rel = "stylesheet" href = "../css/page_style.css"/>
 		<script type = "text/javascript" src = "../js/Defines.js"></script>
 		<script type = "text/javascript" src = "../js/ResourceLoader.js"></script>
 		<script>
 			window.onload = function(){
 				var il = new KaboomBoy.ImageLoader();
-				il.queueLoadImage("brick", "../assets/img/New Folder/Brick.png");
-				il.queueLoadImage("stone", "../assets/img/New Folder/Stone Block.png");
-				il.queueLoadImage("metal", "../assets/img/New Folder/Metal Block.png");
-				il.queueLoadImage("pillar", "../assets/img/New Folder/Pillar.png");
+				il.queueLoadImage("brick", "../assets/img/test/Brick.png");
+				il.queueLoadImage("stone", "../assets/img/test/Stone.png");
+				il.queueLoadImage("metal", "../assets/img/test/Metal.png");
+				il.queueLoadImage("pillar", "../assets/img/test/Pillar.png");
 
 				il.loadAllImages(function(path, success, remaining){
 					console.log("Loading " + path + " finished, result: " + (success ? "Success" : "Fail") + ". remaining: " + remaining);
 				}, function(){
 					var ctx = document.getElementById("canvas").getContext("2d");
 
-					var images = {
-						brick: il.getImage("brick"),
-						stone: il.getImage("stone"),
-						metal: il.getImage("metal"),
-						pillar: il.getImage("pillar")
-					};
+					var images = [
+						il.getImage("brick"),
+						il.getImage("stone"),
+						il.getImage("metal"),
+						il.getImage("pillar")						
+					]
 
 					var w = 40;
 
-					for(var i in images){
+					for(var i = 0; i < images.length; i++){
 						if(images[i]){
-							ctx.drawImage(images[i], 100 + (w += 40), 100, 40, 40);
+							ctx.drawImage(images[i], 180 + w, 180, 40, 40);
+							w += 40; 
 						}else{
 							console.log(i + " not drawn. invalid image. " + images[i]);
 						}
 					}
 
-					//ctx.drawImage(il.getImage("brick"), 100, 100, 40, 40);
-					//ctx.drawImage(il.getImage("stone"), 100, 140, 40, 40);
-					//ctx.drawImage(il.getImage("metal"), 140, 100, 40, 40);
-					//ctx.drawImage(il.getImage("pillar"), 140, 140, 40, 40);
 				});
 
 			}
 		</script>
 	</head>
 	<body>
-		<canvas id = "canvas" width = "600", height = "400"></canvas>
+		<div id = "game-container">
+			<canvas id = "canvas" width = "600", height = "400"></canvas>
+		</div>
+		<div id = "description">
+			<h2>ImageLoader Test</h2>
+			<b>Expected Result: </b>
+			 4 Images will be drawn, in order: Brick, Stone, Metal, and Pillar(top-view). <br>
+			 Console will log the status of the image load. <br>
+		</div>	
 	</body>
 </html>
