@@ -6,12 +6,18 @@
 	 *		- Tracks which part of the map is vieved
 	 *		- Renders the viewable part of the map
 	 *
+	 *	@param grid - a 2D array of `Tile` objects containing tile data
+	 *	@param tilesheet - a `Spritesheet` to be used for rendering the map
+	 *	@param screenWidth - width of the display screen
+	 *	@param screenHeight - height of the display screen
+	 *
 	 */
-	function Map(grid, tilesheet, screenWidth, screenHeight){
+	function Map(tiles, tilesheet, screenWidth, screenHeight){
 		// Map data
-		this.grid = grid;
-		this._gridCols = grid[0].length;
-		this._gridRows = grid.length;
+		this._mapTiles = tiles;
+		this._mapCols = this._mapTiles[0].length;
+		this._mapRows = this._mapTiles.length;
+
 		// Tiles Spritesheet
 		this._tilesheet = tilesheet;
 
@@ -62,8 +68,8 @@
 			yEnd = yStart + this._numRowsVisible;
 
 		// Bounds
-		xEnd = (xEnd > this._gridCols - 1 ? this._gridCols - 1 : xEnd);
-		yEnd = (yEnd > this._gridRows - 1 ? this._gridRows - 1 : yEnd);
+		xEnd = (xEnd > this._mapCols - 1 ? this._mapCols - 1 : xEnd);
+		yEnd = (yEnd > this._mapRows - 1 ? this._mapRows - 1 : yEnd);
 
 		// Determine screen coordinates (where to draw tiles on screen)
 		var xScreenStart = -(this._xWorld % spriteWidth),
@@ -77,7 +83,7 @@
 			x = xScreenStart;
 			for(j = xStart; j < xEnd + 1; j++){
 				// Draw Tile
-				this._tilesheet.drawSpriteToContext(ctx, this.grid[i][j], x, y);
+				this._tilesheet.drawSpriteToContext(ctx, this._mapTiles[i][j].index, x, y);
 				x += spriteWidth;
 			}
 			y += spriteHeight;
