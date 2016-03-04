@@ -41,6 +41,13 @@
 		this.setWorldPosition(0, 0);
 	}
 
+	Map.prototype.getTileDimensions = function(){
+		return {
+			w: this._tileWidth,
+			h: this._tileHeight
+		};
+	}
+
 	/**
 	 *	Sets the top-left corner of the screen to be at [x, y] in world coordinates
 	 */
@@ -51,6 +58,10 @@
 		// Recalculate tile Offset
 		this._xTileOffset = Math.floor(x / this._tileWidth);
 		this._yTileOffset = Math.floor(y / this._tileHeight);
+	}
+
+	Map.prototype.getTile = function(r, c){
+		return this._mapTiles[r][c] || null;
 	}
 
 	/**

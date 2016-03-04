@@ -26,7 +26,7 @@
  	/**
  	 *	Game Engine
  	 */
- 	function GameEngine(container, fps, screenWidth, screenHeight, scale){
+ 	function GameEngine(fps, screenWidth, screenHeight, scale){
 
  		// Set defaults
  		screenWidth = (typeof screenWidth === "undefined" ? DEFAULT_SCREEN_WIDTH : screenWidth);
@@ -39,7 +39,7 @@
 		this._displayCanvas = createCanvas(screenWidth, screenHeight);
 		this._displayContext = this._displayCanvas.getContext("2d");
 		this._displayContext.imageSmoothingEnabled = false;
-		container.appendChild(this._displayCanvas);
+		//container.appendChild(this._displayCanvas);
 
 		// Backbuffer (for double buffering)
 		this._bufferCanvas = createCanvas(Math.floor(screenWidth / scale), Math.floor(screenHeight / scale));
@@ -48,6 +48,10 @@
 
  		// GameStateManager
  		this._gsm = new GameStateManager();
+ 	}
+
+ 	GameEngine.prototype.init = function(container){
+ 		container.appendChild(this._displayCanvas);
  	}
 
  	GameEngine.prototype.getMainCanvas = function(){
@@ -103,7 +107,7 @@
 	 				curFPS = framesLastSecond;
 	 				framesLastSecond = 0;
 	 				nextMinute += 1000;
-	 				console.log("FPS: " + curFPS);
+	 				//console.log("FPS: " + curFPS);
 	 			}
 
 	 			requestAnimationFrame(loop);

@@ -20,6 +20,33 @@ Game Elements:
 	+ Enemies
 
 
+To-Do:
+	- ResourceLoaders
+	- Fundamental Game Engine parts
+	- Map
+	- Game Elements
+
+Map Data:
+	- map
+	- player
+	- enemies
+
+
+
+===================================================
+
+Map
+
+	+ Determines which tiles to draw and where to draw them
+		- World Position
+		- Screen Position
+	
+===================================================
+
+Entity:
+	- position
+	- velocity
+	- hitbox
 
 
 
@@ -49,6 +76,31 @@ Game Elements:
 
 
 
+
+
+====================================================
+
+Player
+	 + Position
+	 + Motion
+	 + Collision
+
+
+
+Block Values:
+	[0] - Floor tile
+	[1] - Impassable
+	[2-5] - (no value)
+	[6] - Block Level 1
+	[7] - Block Level 2
+	[8] - Block Level 3
+	[9] - Block Level 4
+	[10]- Block Level 5
+
+Tilemap collision process
+
+	1. 
+	
 
 
 
