@@ -61,6 +61,9 @@
 	}
 
 	Map.prototype.getTile = function(r, c){
+		if(r < 0 || r > (this._mapRows - 1) || c < 0 || c > (this._mapCols - 1)){
+			return null;
+		}
 		return this._mapTiles[r][c] || null;
 	}
 

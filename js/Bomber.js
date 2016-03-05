@@ -15,8 +15,9 @@
 		this._mapMovement = new MapMovementComponent(tilemap, this);
 
 		// Movement
-		this._speed = values.speed || BOMBER_DEFAULT_SPEED;
+		this.speed = values.speed || BOMBER_DEFAULT_SPEED;
 		this._direction = 0;
+		this.passLevel = 0;
 	}
 
 	Bomber.prototype = new Entity();
@@ -47,10 +48,10 @@
 		// Update Map position
 		this.dx = this.dy = 0;
 		switch(this._direction){
-			case Defines.LEFT: this.dx = -this._speed; break;
-			case Defines.UP: this.dy = -this._speed; break;
-			case Defines.RIGHT: this.dx = this._speed; break;
-			case Defines.DOWN: this.dy = this._speed; break;
+			case Defines.LEFT: this.dx = -this.speed; break;
+			case Defines.UP: this.dy = -this.speed; break;
+			case Defines.RIGHT: this.dx = this.speed; break;
+			case Defines.DOWN: this.dy = this.speed; break;
 			default: break;
 		}
 
