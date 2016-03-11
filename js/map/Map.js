@@ -41,6 +41,14 @@
 		this.setWorldPosition(0, 0);
 	}
 
+	Map.prototype.getTileWidth = function(){
+		return this._tileWidth;
+	}
+
+	Map.prototype.getTileHeight = function(){
+		return this._tileHeight;
+	}
+
 	Map.prototype.getTileDimensions = function(){
 		return {
 			w: this._tileWidth,

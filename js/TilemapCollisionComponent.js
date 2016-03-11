@@ -1,120 +1,159 @@
 (function(){
 
-	// corner values for sliding
-	var NO_CORNER = -2, NO_VALUE = -1;
 
-	/**
-	 *
-	 *
-	 *
-	 */
-	function detectTileCollisions(tilemap, newVector, passLevel, mEntityCoord, pEntityCoord, mEntitySize, pEntitySize, mTileSize, pTileSize, xaxis){
-		// dir: normalized direction vector
-		// sFront: major axis coordinate of the side facing the direction of motion
-		// mDist: distance moved, with the origin at the nearest side of the next tile
-		// eOffset: entity's offset from the colliding tile in case of collision
-		var dir, sFront, mDist, eOffset;
+	var detectTileCollision = (function(){
+		var slideDirection = 0;
 
-		// [pStart, pEnd]: range of the tiles to be checked in the perpendicular axis
-		var pStart, pEnd;
+		var handleCollision = function(tilemap, entity, onXAxis){
 
-		// tilesTopass: number of tiles along the major axis passed by the entity's path of movement
-		var tilesToPass, curTile, tile, resPos, adVel, corner, i, j;
+			var mEntitySideA, pEntitySideA, mEntitySideB, pEntitySideB, mTileSize, pTileSize;
 
-		// resPos: if the entity collides with a tile, it is the major axis coordinate of the collision
-		var resPos;
+			// dir: normalized direction vector
+			// sFront: major axis coordinate of the side facing the direction of motion
+			// mDist: distance moved, with the origin at the nearest side of the next tile
+			// eOffset: entity's offset from the colliding tile in case of collision
+			var velocity, dir, sFront, mDist, eOffset;
 
-		vel = (xaxis ? newVector.dx : newVector.dy);
+			// [pStart, pEnd]: range of the tiles to be checked in the perpendicular axis
+			var pStart, pEnd;
 
-		if(vel > 0){
-			dir = 1;
-			sFront = mEntityCoord + mEntitySize - 1;
-			mDist = vel - mTileSize + (sFront % mTileSize);
-			eOffset = -1;
-		}else{
-			dir = -1;
-			sFront = mEntityCoord;
-			mDist = (-vel) - (sFront % mTileSize) - 1;
-			eOffset = mTileSize;
-		}
+			// tilesTopass: number of tiles along the major axis passed by the entity's path of movement
+			// resPos: if the entity collides with a tile, it is the major axis coordinate of the collision
+			var tilesToPass, curTile, tile, resPos, corner, newVelocity, i, j, halfTileSize, slideFaceCoord;
 
-		// Determine tile checking range
-		pStart = Math.floor(pEntityCoord / pTileSize);
-		pEnd = Math.floor((pEntityCoord + pEntitySize - 1) / pTileSize);
-		mStart = Math.floor(sFront / mTileSize);
-		tilesToPass = Math.floor(mDist / mTileSize) + 1;
+			// Determine variable values according to axis
+			if(onXAxis){
+				velocity = entity.dx;
+				mEntitySideA = entity.x;
+				pEntitySideA = entity.y;
 
-		// Detect collisions
-		resPos = null;
-		adVel = null;
-		curTile = mStart;
+				mEntitySideB = entity.x + entity.w - 1;
+				pEntitySideB = entity.y + entity.h - 1;
 
-		for(i = 0; i < tilesToPass + 1; i++){
-			for(j = pStart; j < pEnd + 1; j++){
-				if(xaxis === true){
-					tile = tilemap.getTile(j, curTile);
-				}else{
-					tile = tilemap.getTile(curTile, j);
-				}
+				mTileSize = tilemap.getTileWidth();
+				pTileSize = tilemap.getTileHeight();
+			}else{
+				velocity = entity.dy;
+				mEntitySideA = entity.y;
+				pEntitySideA = entity.x;
 
-				// Check if tile is passable
-				if(tile !== null && tile.type > passLevel){
-					if(resPos === null){
-						resPos = (curTile * mTileSize) + eOffset;
-						adVel = resPos - sFront;
+				mEntitySideB = entity.y + entity.h - 1;
+				pEntitySideB = entity.x + entity.w - 1;
+
+				mTileSize = tilemap.getTileHeight();
+				pTileSize = tilemap.getTileWidth();
+			}
+
+			if(velocity > 0){
+				dir = 1;
+				sFront = mEntitySideB;
+				mDist = velocity - mTileSize + (sFront % mTileSize);
+				eOffset = -1;
+			}else{
+				dir = -1;
+				sFront = mEntitySideA;
+				mDist = (-velocity) - (sFront % mTileSize) - 1;
+				eOffset = mTileSize;
+			}
+
+			// Determine tile checking range
+			pStart = Math.floor(pEntitySideA / pTileSize);
+			pEnd = Math.floor(pEntitySideB / pTileSize);
+			mStart = Math.floor(sFront / mTileSize);
+			tilesToPass = Math.floor(mDist / mTileSize) + 1;
+
+			// Detect collisions
+			resPos = null;
+			curTile = mStart;
+			corner = NO_VALUE;
+
+			for(i = 0; i < tilesToPass + 1; i++){
+				for(j = pStart; j < pEnd + 1; j++){
+					if(onXAxis === true){
+						tile = tilemap.getTile(j, curTile);
+					}else{
+						tile = tilemap.getTile(curTile, j);
 					}
+
+					// Check if tile is passable
+					if(tile !== null && tile.type > entity.passLevel){
+						if(resPos === null){
+							resPos = (curTile * mTileSize) + eOffset;
+						}
+
+						if(corner === NO_VALUE){
+							corner = j;
+						}
+					}
+
 				}
 
+				if(resPos !== null){
+					break;
+				}
+
+				curTile += dir;
 			}
 
 			if(resPos !== null){
-				break;
+				newVelocity = (resPos - sFront);
+
+				if(newVelocity === 0 && slideDirection === 0){
+					halfTileSize = pTileSize / 2;
+
+					if(corner === pStart && (pEntitySideB % pTileSize) > halfTileSize){
+						slideDirection = 1;
+					}else
+					if(corner === pEnd && (pEntitySideA % pTileSize) < halfTileSize){
+						slideDirection = -1;
+					}
+				}
+
+				if(slideDirection !== 0){
+					if(onXAxis){
+						entity.dy = velocity * slideDirection * dir;	
+						entity.dx = 0;				
+					}else{
+						entity.dx = velocity * slideDirection * dir;
+						entity.dy = 0;
+					}
+
+					slideDirection = 0;
+
+					return handleCollision(tilemap, entity);
+				}
+
+				if(onXAxis){
+					entity.dx = newVelocity;
+				}else{
+					entity.dy = newVelocity;
+				}
 			}
 
-			curTile += dir;
-		}
-
-		
-		if(resPos !== null){
-			if(xaxis === true){
-				newVector.dx = adVel;
-			}else{
-				newVector.dy = adVel;
-			}
-
-			return true;
-		}else{
 			return false;
+
 		}
-	}
+
+		return handleCollision;
+	
+	})();
 
 
-
-	function TilemapCollisionComponent(tilemap){
-		this._tilemap = tilemap;
-
-		this._newVector = {
-			dx: 0,
-			dy: 0
-		};
-
+	function TilemapCollisionComponent(tilemap, entity){
 		(function(that){
+			that._tilemap = tilemap;
+
 			var td = tilemap.getTileDimensions();
 			that._tileWidth = td.w;
 			that._tileHeight = td.h;
 
-			that._getTileXY = function(x, y){
-				return tilemap.getTile(y, x);
-			}
+			that._entity = entity;
 
-			that._getTileYX = function(y, x){
-				return tilemap.getTile(y, x);
-			}
 		})(this);
-
 	}
 
-	TilemapCollisionComponent.prototype.moveEntity = function(e){
+
+	TilemapCollisionComponent.prototype.checkTileCollision = function(){
 		/*
 		 *	This function checks for entity-tilemap collisions and adjusts and corrects them accordingly.
 		 *	The entity is assumed to move only in a single axis (either x-axis or y-axis, but not both).
@@ -124,29 +163,22 @@
 		 *
 		 *
 		 */
-		 this._newVector.dx = e.dx;
-		 this._newVector.dy = e.dy;
+		var en = this._entity;
 
-		 if(e.dx !== 0){
-		 	if(detectTileCollisions(this._tilemap, this._newVector, e.passLevel, e.x, e.y, e.w, e.h, this._tileWidth, this._tileHeight, true) === true){
-		 		e.dx = this._newVector.dx;
-		 	}
-		 	
-		 }else
-		 if(e.dy !== 0){
-		 	if(detectTileCollisions(this._tilemap, this._newVector, e.passLevel, e.y, e.x, e.h, e.w, this._tileHeight, this._tileWidth, false) === true){
-		 		e.dy = this._newVector.dy;
-		 	}
-		 }else{
-		 	// No motion
-		 	return false;
-		 }
+		if(en.dx === 0 && en.dy === 0){
+			return;
+		}
 
-		 e.x += e.dx;
-		 e.y += e.dy;
-
-		 return;
+		if(en.dx !== 0){
+			detectTileCollision(this._tilemap, en, true);
+		}else{
+			detectTileCollision(this._tilemap, en, false);
+		}
+		
+		en.x += en.dx;
+		en.y += en.dy;
 	}
+
 
 	
 

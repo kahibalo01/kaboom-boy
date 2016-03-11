@@ -2,17 +2,17 @@
  *
  *
  */
-(function(Defines, Entity){
+(function(Defines, Entity, TilemapCollisionComponent){
 
 	var directions = [Defines.LEFT, Defines.UP, Defines.RIGHT, Defines.DOWN];
 	var BOMBER_DEFAULT_SPEED = 2;
 
-	function Bomber(values, tilemap, mapMovementComponent){
+	function Bomber(values, tilemap){
 		Entity.call(this, values.x, values.y, values.w, values.h);
 
 		this._input = values.inputhandler || null;
 		this._tilemap = tilemap;
-		this._mapMovementComponent = mapMovementComponent;
+		this._tilemapCollisionComponent = new TilemapCollisionComponent(tilemap, this);
 
 		// Movement
 		this.speed = values.speed || BOMBER_DEFAULT_SPEED;
@@ -55,7 +55,7 @@
 			default: break;
 		}
 
-		this._mapMovementComponent.moveEntity(this);
+		this._tilemapCollisionComponent.checkTileCollision();
 		//this.x += this.dx;
 		//this.y += this.dy;
 
@@ -71,4 +71,4 @@
 	window.KaboomBoy.Bomber = Bomber;
 
 
-})(KaboomBoy.Defines, KaboomBoy.Entity);
+})(KaboomBoy.Defines, KaboomBoy.Entity, KaboomBoy.TilemapCollisionComponent);

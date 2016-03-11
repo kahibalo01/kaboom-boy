@@ -62,8 +62,7 @@
 
 					ecs.init = function(){
 						ecs.tileMap = new Map(createMap(mapdata), new Spritesheet(imageloader.getImage("maptest-image"), 20, 20), 640, 480);			
-						ecs.tilemapCollisionComponent = new TilemapCollisionComponent(this.tileMap);
-
+	
 						ecs.bomber = new Bomber({
 							x: 0,
 							y: 0,
@@ -71,7 +70,7 @@
 							h: 20,
 							speed: 1,
 							inputhandler: keyhandler
-						}, this.tileMap, this.tilemapCollisionComponent);
+						}, this.tileMap);
 					}
 
 					ecs.update = function(){
