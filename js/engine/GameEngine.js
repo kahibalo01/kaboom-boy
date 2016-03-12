@@ -39,7 +39,6 @@
 		this._displayCanvas = createCanvas(screenWidth, screenHeight);
 		this._displayContext = this._displayCanvas.getContext("2d");
 		this._displayContext.imageSmoothingEnabled = false;
-		//container.appendChild(this._displayCanvas);
 
 		// Backbuffer (for double buffering)
 		this._bufferCanvas = createCanvas(Math.floor(screenWidth / scale), Math.floor(screenHeight / scale));
@@ -50,31 +49,38 @@
  		this._gsm = new GameStateManager();
  	}
 
+
  	GameEngine.prototype.init = function(container){
  		container.appendChild(this._displayCanvas);
  	}
+
 
  	GameEngine.prototype.getMainCanvas = function(){
  		return this._displayCanvas;
  	} 
 
+
  	GameEngine.prototype.getGameStateManager = function(){
  		return this._gsm;
  	}
 
+
  	GameEngine.prototype.update = function(){
  		this._gsm.update();
  	}
+
 
  	GameEngine.prototype.render = function(){
  		this._bufferContext.clearRect(0, 0, this._bufferCanvas.width, this._bufferCanvas.height);
  		this._gsm.render(this._bufferContext);
  	}
 
+
  	GameEngine.prototype.renderToScreen = function(){
  		this._displayContext.clearRect(0, 0, this._displayCanvas.width, this._displayCanvas.height);
  		this._displayContext.drawImage(this._bufferCanvas, 0, 0, this._displayCanvas.width, this._displayCanvas.height);
  	}
+
 
  	GameEngine.prototype.run = function(){
  		var ge = this;
@@ -121,7 +127,6 @@
 
  		// Start running
  		requestAnimationFrame(gameloop);
-
  	}
 
  	// 

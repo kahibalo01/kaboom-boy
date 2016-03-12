@@ -55,7 +55,7 @@
 			default: break;
 		}
 
-		this._tilemapCollisionComponent.checkTileCollision();
+		this._tilemapCollisionComponent.handleTileCollision();
 		//this.x += this.dx;
 		//this.y += this.dy;
 

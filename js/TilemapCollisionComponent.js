@@ -1,10 +1,10 @@
 (function(){
 
+	var handleCollision = (function(){
+		var NO_VALUE = -1,
+			slideDirection = 0;
 
-	var detectTileCollision = (function(){
-		var slideDirection = 0;
-
-		var handleCollision = function(tilemap, entity, onXAxis){
+		var handleCollisionFunc = function(tilemap, entity, onXAxis){
 
 			var mEntitySideA, pEntitySideA, mEntitySideB, pEntitySideB, mTileSize, pTileSize;
 
@@ -95,6 +95,7 @@
 				curTile += dir;
 			}
 
+			// Collision Resolution
 			if(resPos !== null){
 				newVelocity = (resPos - sFront);
 
@@ -111,76 +112,58 @@
 
 				if(slideDirection !== 0){
 					if(onXAxis){
-						entity.dy = velocity * slideDirection * dir;	
+						entity.dy = (velocity * dir) * slideDirection;	
 						entity.dx = 0;				
 					}else{
-						entity.dx = velocity * slideDirection * dir;
+						entity.dx = (velocity * dir) * slideDirection;
 						entity.dy = 0;
 					}
 
 					slideDirection = 0;
 
-					return handleCollision(tilemap, entity);
+					return handleCollisionFunc(tilemap, entity);
+				}else{
+					if(onXAxis){
+						entity.dx = newVelocity;
+					}else{
+						entity.dy = newVelocity;
+					}	
 				}
 
-				if(onXAxis){
-					entity.dx = newVelocity;
-				}else{
-					entity.dy = newVelocity;
-				}
+				return true;
 			}
 
 			return false;
 
 		}
 
-		return handleCollision;
+		return handleCollisionFunc;
 	
 	})();
 
 
 	function TilemapCollisionComponent(tilemap, entity){
-		(function(that){
-			that._tilemap = tilemap;
-
-			var td = tilemap.getTileDimensions();
-			that._tileWidth = td.w;
-			that._tileHeight = td.h;
-
-			that._entity = entity;
-
-		})(this);
+		this._tilemap = tilemap;
+		this._entity = entity;
 	}
 
 
-	TilemapCollisionComponent.prototype.checkTileCollision = function(){
-		/*
-		 *	This function checks for entity-tilemap collisions and adjusts and corrects them accordingly.
-		 *	The entity is assumed to move only in a single axis (either x-axis or y-axis, but not both).
-		 * 
-		 *	The check is performed by checking the tiles that collides with the path of the entity. If the
-		 *	tile can block the entity, a collision occurs, and the collision will be resolved.
-		 *
-		 *
-		 */
+	TilemapCollisionComponent.prototype.handleTileCollision = function(){
 		var en = this._entity;
 
 		if(en.dx === 0 && en.dy === 0){
-			return;
+			return false;
 		}
 
 		if(en.dx !== 0){
-			detectTileCollision(this._tilemap, en, true);
+			handleCollision(this._tilemap, en, true);
 		}else{
-			detectTileCollision(this._tilemap, en, false);
+			handleCollision(this._tilemap, en, false);
 		}
 		
 		en.x += en.dx;
 		en.y += en.dy;
 	}
-
-
-	
 
 	window.KaboomBoy.TilemapCollisionComponent = TilemapCollisionComponent;
 
