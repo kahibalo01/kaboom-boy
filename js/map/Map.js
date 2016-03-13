@@ -105,7 +105,7 @@
 			x = xScreenStart;
 			for(j = xStart; j < xEnd + 1; j++){
 				// Draw Tile
-				this._tilesheet.drawSpriteToContext(ctx, this._mapTiles[i][j].index, x, y);
+				this._tilesheet.drawSpriteOnIndexToContext(ctx, this._mapTiles[i][j].index, x, y);
 				x += spriteWidth;
 			}
 			y += spriteHeight;

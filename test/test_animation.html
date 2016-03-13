@@ -1,0 +1,116 @@
+<html>
+	<head>
+		<title>Animation Test</title>
+		<link rel = "stylesheet" href = "../css/page_style.css"/>
+		<script src = "../js/Defines.js"></script>
+		<script src = "../js/engine/GameStateManager.js"></script>
+		<script src = "../js/engine/GameEngine.js"></script>
+		<script src = "../js/engine/KeyHandler.js"></script>
+		<script src = "../js/map/Tile.js"></script>
+		<script src = "../js/map/Map.js"></script>
+		<script src = "../js/gfx/ImageLoader.js"></script>
+		<script src = "../js/gfx/Spritesheet.js"></script>
+		<script src = "../js/gfx/Animation.js"></script>
+		<script src = "../js/entities/Entity.js"></script>
+		<script src = "../js/entities/TilemapCollisionComponent.js"></script>
+		<script src = "../js/entities/Bomber.js"></script>
+		<script>
+			var mapdata = [
+					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
+					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
+					[[5, 0], [5, 0], [5, 0], [1, 1], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
+					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
+					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
+					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
+					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
+					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
+					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
+					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]]
+			];
+
+			var Game = (function(Defines, GameStateManager, GameEngine, KeyHandler, Tile, Map, ImageLoader, Spritesheet, Entity, TilemapCollisionComponent, Bomber){
+
+				function createMap(maparray){
+					var i, j, 
+						r = maparray.length, c = maparray[0].length,
+						tiledata;
+
+					var tilemap = [], row;
+
+					for(i = 0; i < r; i++){
+						row = [];
+						for(j = 0; j < c; j++){
+							tiledata = maparray[i][j];
+							row.push(new Tile(tiledata[0], tiledata[1]));
+						}
+						tilemap.push(row);
+					}
+					return tilemap;
+				}
+
+				var ge, gsm, keyhandler, imageloader;
+
+				var state = (function(){
+
+					var s = {};
+
+					s.init = function(){
+						s.tileMap = new Map(createMap(mapdata), new Spritesheet(imageloader.getImage("maptest-image"), 20, 20), 640, 480);
+
+						s.player = new Bomber({
+							x: 0,
+							y: 0,
+							w: 20,
+							h: 20,
+							speed: 1,
+							inputhandler: keyhandler
+						}, s.tileMap, imageloader.getImage("character-sprites"));
+					}
+
+					s.update = function(){
+						this.player.update();
+					}
+
+					s.render = function(ctx){
+						this.tileMap.render(ctx);
+						this.player.render(ctx);
+					}
+
+					return s;
+				})();
+
+				ge = new GameEngine(30, 640, 480, 3);
+				gsm = ge.getGameStateManager();
+				gsm.addState("state", state);
+
+				imageloader = new ImageLoader();
+				imageloader.queueLoadImage("maptest-image", "../assets/img/test/Map Tiles Test.png");
+				imageloader.queueLoadImage("character-sprites", "../assets/img/test/Test Character.png");
+
+				return function(){
+					imageloader.loadAllImages(function(){},
+						function(){
+							ge.init(document.getElementById("game-container"));
+							keyhandler = new KeyHandler(ge.getMainCanvas());
+							gsm.loadState("state", true);
+							ge.run();
+						}
+					);
+				}
+
+
+			})(KaboomBoy.Defines, KaboomBoy.GameStateManager, KaboomBoy.GameEngine, KaboomBoy.KeyHandler, KaboomBoy.Tile, KaboomBoy.Map, KaboomBoy.ImageLoader, KaboomBoy.Spritesheet, KaboomBoy.Entity, KaboomBoy.TilemapCollisionComponent, KaboomBoy.Bomber);
+
+
+			window.onload = function(){
+				Game();
+			}
+		</script>
+	</head>
+	<body>
+		<div id = "game-container"></div>
+		<div id = "description">
+
+		</div>
+	</body>
+</html>
