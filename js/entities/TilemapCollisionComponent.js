@@ -2,7 +2,7 @@
 
 	var handleCollision = (function(){
 		var NO_VALUE = -1,
-			slideDirection = 0;
+			isSliding = false;
 
 		var handleCollisionFunc = function(tilemap, entity, onXAxis){
 
@@ -19,7 +19,7 @@
 
 			// tilesTopass: number of tiles along the major axis passed by the entity's path of movement
 			// resPos: if the entity collides with a tile, it is the major axis coordinate of the collision
-			var tilesToPass, curTile, tile, resPos, corner, newVelocity, i, j, halfTileSize, slideFaceCoord;
+			var tilesToPass, curTile, tile, resPos, corner, newVelocity, i, j, halfTileSize, slideFaceCoord, slideDirection;
 
 			// Determine variable values according to axis
 			if(onXAxis){
@@ -95,44 +95,50 @@
 				curTile += dir;
 			}
 
+
 			// Collision Resolution
 			if(resPos !== null){
 				newVelocity = (resPos - sFront);
 
-				if(newVelocity === 0 && slideDirection === 0){
-					halfTileSize = pTileSize / 2;
-
-					if(corner === pStart && (pEntitySideB % pTileSize) > halfTileSize){
-						slideDirection = 1;
-					}else
-					if(corner === pEnd && (pEntitySideA % pTileSize) < halfTileSize){
-						slideDirection = -1;
-					}
-				}
-
-				if(slideDirection !== 0){
-					if(onXAxis){
-						entity.dy = (velocity * dir) * slideDirection;	
-						entity.dx = 0;				
-					}else{
-						entity.dx = (velocity * dir) * slideDirection;
-						entity.dy = 0;
-					}
-
+				if(!isSliding){
 					slideDirection = 0;
 
-					return handleCollisionFunc(tilemap, entity);
-				}else{
-					if(onXAxis){
-						entity.dx = newVelocity;
-					}else{
-						entity.dy = newVelocity;
-					}	
+					if(newVelocity === 0){
+						halfTileSize = pTileSize / 2;
+
+						if(corner === pStart && (pEntitySideB % pTileSize) > halfTileSize){
+							slideDirection = 1;
+						}else
+						if(corner === pEnd && (pEntitySideA % pTileSize) < halfTileSize){
+							slideDirection = -1;
+						}
+					}
+
+					if(slideDirection !== 0){
+						if(onXAxis){
+							entity.dy = (velocity * dir) * slideDirection;	
+							entity.dx = 0;				
+						}else{
+							entity.dx = (velocity * dir) * slideDirection;
+							entity.dy = 0;
+						}
+
+						isSliding = true;
+						return handleCollisionFunc(tilemap, entity, !onXAxis);
+					}
 				}
 
+				isSliding = false;
+				if(onXAxis){
+					entity.dx = newVelocity;
+				}else{
+					entity.dy = newVelocity;
+				}	
+				
 				return true;
 			}
 
+			isSliding = false;
 			return false;
 
 		}

@@ -19,9 +19,9 @@
 					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
 					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
 					[[5, 0], [5, 0], [5, 0], [1, 1], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
-					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
-					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
-					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
+					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [1, 1], [5, 0], [5, 0], [5, 0]],
+					[[5, 0], [1, 1], [5, 0], [5, 0], [5, 0], [1, 1], [5, 0], [5, 0], [5, 0], [5, 0]],
+					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [1, 1], [5, 0], [5, 0], [5, 0], [5, 0]],
 					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
 					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
 					[[5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0], [5, 0]],
@@ -63,8 +63,10 @@
 							w: 20,
 							h: 20,
 							speed: 1,
-							inputhandler: keyhandler
-						}, s.tileMap, imageloader.getImage("character-sprites"));
+							input: keyhandler,
+							tilemap: s.tileMap,
+							sprites: imageloader.getImage("character-sprites")
+						});
 					}
 
 					s.update = function(){
@@ -85,7 +87,7 @@
 
 				imageloader = new ImageLoader();
 				imageloader.queueLoadImage("maptest-image", "../assets/img/test/Map Tiles Test.png");
-				imageloader.queueLoadImage("character-sprites", "../assets/img/test/Test Character.png");
+				imageloader.queueLoadImage("character-sprites", "../assets/img/test/Bomber1.png");
 
 				return function(){
 					imageloader.loadAllImages(function(){},

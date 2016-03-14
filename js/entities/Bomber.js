@@ -11,16 +11,16 @@
 		IDLE = 0,
 		MOVING_LEFT = 2,
 		MOVING_RIGHT = 1,
-		MOVING_UP = 1,
-		MOVING_DOWN = 2;
+		MOVING_UP = 4,
+		MOVING_DOWN = 3;
 
 
-	function Bomber(values, tilemap, sprites){
+	function Bomber(values){
 		Entity.call(this, values.x, values.y, values.w, values.h);
 
-		this._input = values.inputhandler || null;
-		this._tilemap = tilemap;
-		this._tilemapCollisionComponent = new TilemapCollisionComponent(tilemap, this);
+		this._input = values.input || null;
+		this._tilemap = values.tilemap;
+		this._tilemapCollisionComponent = new TilemapCollisionComponent(values.tilemap, this);
 
 		// Movement
 		this.speed = values.speed || BOMBER_DEFAULT_SPEED;
@@ -28,9 +28,9 @@
 		this.passLevel = 0;
 
 		// Animation
-		this._animation = new Animation(new Spritesheet(sprites, 20, 20), 
-			[1, 4, 4],
-			[0, 5, 5]
+		this._animation = new Animation(new Spritesheet(values.sprites, 20, 20), 
+			[1, 7, 7, 2, 2],
+			[0, 3, 3, 12, 12]
 		);
 	}
 

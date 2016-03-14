@@ -31,8 +31,8 @@
 
 		// Dimensions
 		var tilesheetDimensions = tilesheet.getDimensions();
-		this._tileWidth = tilesheetDimensions.spriteWidth;
-		this._tileHeight = tilesheetDimensions.spriteHeight;
+		this._tileWidth = tilesheet.getSpriteWidth();
+		this._tileHeight = tilesheet.getSpriteHeight();
 
 		// Tiles to draw
 		this._numColsVisible = Math.ceil(screenWidth / this._tileWidth);
