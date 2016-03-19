@@ -26,7 +26,7 @@
 	Spritesheet.prototype.drawSpriteToContext = function(ctx, row, col, x, y){
 		var sw = null, sh = null;
 
-		if(row > -1 && row < this._numRows && col > -1 && col < this._numCols){
+		if(row > -1 && row < this.numRows && col > -1 && col < this.numCols){
 			sw = this.spriteWidth;
 			sh = this.spriteHeight;
 			ctx.drawImage(this._image, this._xBase + (col * sw), this._yBase + (row * sh), sw, sh, x, y, sw, sh);
