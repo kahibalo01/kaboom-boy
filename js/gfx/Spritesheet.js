@@ -1,5 +1,10 @@
 (function(){
 
+	/**
+	 * Represents a grid of equally sized `sprites` from a part of (or the whole)
+	 * image reference. 
+	 *
+	 */
 	function Spritesheet(image, xBase, yBase, numRows, numCols, spriteWidth, spriteHeight){
 		this._image = image;
 
@@ -8,44 +13,31 @@
 		this._yBase = yBase;
 
 		// Spritesheet dimensions
-		this._numRows = numRows;
-		this._numCols = numCols;
-		this._spriteWidth = spriteWidth;
-		this._spriteHeight = spriteHeight;
+		this.numRows = numRows;
+		this.numCols = numCols;
+		this.spriteWidth = spriteWidth;
+		this.spriteHeight = spriteHeight;
 	}
 
-
-	Spritesheet.prototype.getSpriteWidth = function(){
-		return this._spriteWidth;
-	}
-
-
-	Spritesheet.prototype.getSpriteHeight = function(){
-		return this._spriteHeight;
-	}
-
-
-	Spritesheet.prototype.getRows = function(){
-		return this._numRows;
-	}
-
-
-	Spritesheet.prototype.getCols = function(){
-		return this._numCols;
-	}
-
-
+	/**
+	 * Draws the sprite from the specified row and column into a context
+	 *
+	 */
 	Spritesheet.prototype.drawSpriteToContext = function(ctx, row, col, x, y){
 		var sw = null, sh = null;
 
 		if(row > -1 && row < this._numRows && col > -1 && col < this._numCols){
-			sw = this._spriteWidth;
-			sh = this._spriteHeight;
+			sw = this.spriteWidth;
+			sh = this.spriteHeight;
 			ctx.drawImage(this._image, this._xBase + (col * sw), this._yBase + (row * sh), sw, sh, x, y, sw, sh);
 		}
 	}
 
-
+	/**
+	 * Draws the sprite from the specified index into a context.
+	 * The sprites' numbering is from left to right, then from top to bottom.
+	 *
+	 */
 	Spritesheet.prototype.drawSpriteOnIndexToContext = function(ctx, index, x, y){
 		this.drawSpriteToContext(ctx, Math.floor(index / this._numCols), (index % this._numCols), x, y);
 	}
