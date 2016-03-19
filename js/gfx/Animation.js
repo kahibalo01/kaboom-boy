@@ -62,10 +62,12 @@
 
 	AnimationHandle.prototype.pause = function(){
 		this._paused = true;
+		return this;
 	}
 
 	AnimationHandle.prototype.unpause = function(){
 		this._paused = false;
+		return this;
 	}
 
 
