@@ -18,79 +18,108 @@
 				var state = (function(){
 					var s = {
 						frameCounter: 0,
-						completeAnimation: null,
-						walkingAnimation1: null,
-						walkingAnimation2: null,
+						fullAnim: null,
+						walkingRight1: null,
+						walkingRight2: null,
+						walkingLeft: null,
+						walkingForward: null,
 						// counters
-						caCounter: 0,
-						wa1Paused: true,
-						wa2Paused: true
+						faCounter: 0,
+						wr1Paused: true,
+						wr2Paused: true,
 					};
 
 					s.init = function(){
+						// Spritesheet starts on walking right animation
 						var spritesheet = new Spritesheet(imageLoader.getImage("character-sprites"), 0, 20, 4, 7, 20, 20);
 
-						this.completeAnimation = (new Animation(spritesheet, 0, 0, [7, 7, 2, 2], [4, 4, 12, 12])).createHandle();
-						this.completeAnimation.setSequence(0);
+						var anim = new Animation(spritesheet, {
+							numFrames: [7, 7, 2, 2],
+							speed: [4, 4, 12, 12]
+						});
 
-						var wa = new Animation(spritesheet, 0, 1, [7], [4]);
+						this.fullAnim = anim.createHandle();
+						this.fullAnim.setSequence(0);
 
-						this.walkingAnimation1 = wa.createHandle();
-						this.walkingAnimation1.setSequence(0);
-						this.walkingAnimation2 = wa.createHandle();
-						this.walkingAnimation2.setSequence(0);
+						var walkingAnimation = new Animation(spritesheet, {
+							numFrames: [7, 7],
+							speed: [4, 4]
+						});
+						
+						this.walkingRight1 = walkingAnimation.createHandle();
+						this.walkingRight1.setSequence(0);
 
-						this.walkingAnimation1.pause();
-						this.walkingAnimation2.pause();
+						this.walkingRight2 = walkingAnimation.createHandle();
+						this.walkingRight2.setSequence(0);
+
+						this.walkingLeft = walkingAnimation.createHandle();
+						this.walkingLeft.setSequence(1);
+
+						var walkingForwardAnim = new Animation(spritesheet, {
+							rowBase: 2,
+							numFrames: [2],
+							speed: [12]
+						})
+						this.walkingForward = walkingForwardAnim.createHandle();
+						this.walkingForward.setSequence(0, 0);
+
+						this.walkingRight1.pause();
+						this.walkingRight2.pause();
 					}
 
 					s.update = function(){
 						this.frameCounter++;
 
 						if(this.frameCounter % 240 === 0){
-							this.caCounter++;
-							if(this.caCounter > 3){
-								this.caCounter = 0;
+							this.faCounter++;
+
+							if(this.faCounter > 3){
+								this.faCounter = 0;
 							}
 
-							console.log("animating completeAnimation sequence #" + this.caCounter);
-							this.completeAnimation.setSequence(this.caCounter);
+							this.fullAnim.setSequence(this.faCounter);
+							console.log("fullAnim change sequence to #" + this.faCounter);
 						}
+
 
 
 						if(this.frameCounter % 300 === 0){
-							this.wa1Paused = !this.wa1Paused;
+							this.wr1Paused = !this.wr1Paused;
 
-							if(!this.wa1Paused){
-								console.log("walking animation 1 started");
-								this.walkingAnimation1.unpause();
+							if(this.wr1Paused){
+								this.walkingRight1.pause();
+								console.log("Walking Right 1 animation paused");
 							}else{
-								console.log("walking animation 1 paused");
-								this.walkingAnimation1.pause();
+								this.walkingRight1.unpause();
+								console.log("Walking Right 1 animation resumed");
 							}
+
+						}
+
+						if(this.frameCounter % 20 === 0){
+							this.walkingForward.nextFrame();
 						}
 
 						if(this.frameCounter % 420 === 0){
-							this.wa2Paused = !this.wa2Paused;
-
-							if(!this.wa2Paused){
-								console.log("walking animation 2 started");
-								this.walkingAnimation2.unpause();
-							}else{
-								console.log("walking animation 2 paused");
-								this.walkingAnimation2.pause();
-							}
+							this.walkingRight2.setSequence(0, 1);
+							console.log("Walking Right 2 animation started for 1 times");
 						}
 
-						this.completeAnimation.update();
-						this.walkingAnimation1.update();
-						this.walkingAnimation2.update();
+
+
+						this.fullAnim.update();
+						this.walkingRight1.update();
+						this.walkingRight2.update();
+						this.walkingLeft.update();
+						this.walkingForward.update();
 					}
 
 					s.render = function(ctx){
-						this.completeAnimation.render(ctx, 40, 50);
-						this.walkingAnimation1.render(ctx, 80, 50);
-						this.walkingAnimation2.render(ctx, 120, 50);
+						this.fullAnim.render(ctx, 40, 20);
+						this.walkingRight1.render(ctx, 80, 20);
+						this.walkingRight2.render(ctx, 120, 20);
+						this.walkingLeft.render(ctx, 40, 60);
+						this.walkingForward.render(ctx, 80, 60);
 					}
 
 					return s;
